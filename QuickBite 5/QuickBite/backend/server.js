@@ -58,11 +58,17 @@ app.get("/api/health", (req,res)=>{
         success:true, message:"quickbite api is running"
     });
 });
-app.use(express.static(path.join(__dirname, "..", "frontend", "dist")));
-app.use((req,res,next)=>{
-    if(req.path.startsWith("/api")) return next();
-    res.sendFile(path.join(__dirname, "..", "frontend", "dist", "index.html"));
-});
+const fs = require("fs");
+const distPath = path.join(__dirname, "..", "frontend", "dist");
+
+
+if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+    app.use((req, res, next) => {
+        if (req.path.startsWith("/api")) return next();
+        res.sendFile(path.join(distPath, "index.html"));
+    });
+}
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 async function startServer(){
