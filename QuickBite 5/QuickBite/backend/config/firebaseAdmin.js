@@ -2,8 +2,12 @@
 const { initializeApp, getApps, cert } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
 
-const serviceAccount = require("./firebase-service-account.json");
-
+function loadServiceAccount() {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  }
+ return require("./firebase-service-account.json");
+}
 let app;
 
 function getFirebaseApp() {
