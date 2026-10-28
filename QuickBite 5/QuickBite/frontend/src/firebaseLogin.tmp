@@ -1,0 +1,13 @@
+export const firebaseLogin = async (idToken, name) => {
+  const data = await request("/auth/firebase", {
+    method: "POST",
+    body: JSON.stringify({ idToken, name }),
+  });
+
+  if (!data.token) {
+    throw new Error("Firebase login response mein QuickBite token nahi mila.");
+  }
+
+  setToken(data.token);
+  return data;
+};

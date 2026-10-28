@@ -1,0 +1,244 @@
+
+
+.home-page {
+  min-height: 70vh;
+  background: #fffdf9;
+  color: #242424;
+  overflow: hidden;
+}
+
+.home-container {
+  width: min(1160px, 90%);
+  margin: 0 auto;
+}
+
+
+
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  padding: 100px 0 110px;
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(255, 190, 120, 0.22),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #fff8ef 0%, #fffdf9 55%, #fff0e5 100%);
+}
+
+.home-hero::after {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  right: -100px;
+  bottom: -150px;
+  border: 45px solid rgba(255, 107, 53, 0.07);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.home-hero .home-container {
+  position: relative;
+  z-index: 1;
+}
+
+
+.home-eyebrow {
+  margin: 0 0 20px;
+  color: #f15b35;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+/* ===== MAIN HEADING ===== */
+
+.home-hero h1 {
+  max-width: 760px;
+  margin: 0;
+  color: #242424;
+  font-size: clamp(48px, 7vw, 82px);
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: -3.5px;
+}
+
+.home-hero h1 span {
+  display: inline-block;
+  color: #f15b35;
+}
+
+
+
+.home-description {
+  max-width: 590px;
+  margin: 25px 0 32px;
+  color: #686868;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.9;
+}
+
+/* ===== CTA BUTTON ===== */
+
+.home-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 0 27px;
+  border: 2px solid #f15b35;
+  border-radius: 12px;
+  background: #f15b35;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 750;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(241, 91, 53, 0.2);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.home-cta:hover {
+  background: #d94725;
+  border-color: #d94725;
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(241, 91, 53, 0.28);
+}
+
+.home-cta:focus-visible {
+  outline: 3px solid rgba(241, 91, 53, 0.35);
+  outline-offset: 4px;
+}
+
+/* ===== HOME CONTENT SECTION ===== */
+
+.home-section {
+  padding-top: 75px;
+  padding-bottom: 85px;
+}
+
+.home-section .home-eyebrow {
+  margin-bottom: 12px;
+}
+
+.home-section h2 {
+  max-width: 720px;
+  margin: 0 0 16px;
+  color: #242424;
+  font-size: clamp(30px, 4vw, 45px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+}
+
+.home-section > p:last-child {
+  max-width: 650px;
+  margin: 0;
+  color: #737373;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* ===== TABLET RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 80px 0 85px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(44px, 9vw, 64px);
+    letter-spacing: -2px;
+  }
+
+  .home-description {
+    max-width: 520px;
+    font-size: 16px;
+  }
+
+  .home-section {
+    padding-top: 60px;
+    padding-bottom: 65px;
+  }
+
+  .home-section h2 {
+    font-size: 34px;
+  }
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+
+@media (max-width: 480px) {
+  .home-container {
+    width: 88%;
+  }
+
+  .home-hero {
+    padding: 65px 0 70px;
+  }
+
+  .home-hero::after {
+    width: 200px;
+    height: 200px;
+    right: -100px;
+    bottom: -100px;
+    border-width: 25px;
+  }
+
+  .home-eyebrow {
+    margin-bottom: 15px;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .home-hero h1 {
+    font-size: 43px;
+    line-height: 1.13;
+    letter-spacing: -1.8px;
+  }
+
+  .home-description {
+    margin: 20px 0 26px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .home-cta {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+
+  .home-section {
+    padding-top: 50px;
+    padding-bottom: 55px;
+  }
+
+  .home-section h2 {
+    font-size: 29px;
+    letter-spacing: -0.8px;
+  }
+
+  .home-section > p:last-child {
+    font-size: 14px;
+  }
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .home-cta {
+    transition: none;
+  }
+}
