@@ -1,6 +1,10 @@
-const{Queue}= require("bullmq");
-const connection =require("../config/redis");
+const { Queue } = require("bullmq");
+const connection = require("../config/redis");
 
-const emailQueue= new Queue("email",{connection});
+const emailQueue = new Queue("email", { connection });
 
-module.exports= emailQueue;
+emailQueue.on("error", (err) => {
+  console.warn("email queue error:", err.code || err.message);
+});
+
+module.exports = emailQueue;

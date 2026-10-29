@@ -6,8 +6,10 @@ const connection = {
   password: process.env.REDIS_PASSWORD || undefined,
   maxRetriesPerRequest: null,
   enableReadyCheck: false,
-  keepAlive: 10000,
+  keepAlive: 5000,
+  connectTimeout: 20000,
   retryStrategy: (times) => Math.min(times * 500, 5000),
+  reconnectOnError: () => true,
 };
 
 if (process.env.REDIS_TLS === "true") {
