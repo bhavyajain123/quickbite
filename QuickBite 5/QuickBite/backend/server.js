@@ -28,9 +28,23 @@ const { registerEventHandlers, unregisterEventHandlers } = require("./events/eve
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = (process.env.CLIENT_URL || "")
+    .split(",")
+    .map((o) => o.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+
+app.use(cors({
+    origin: (origin, callback) => {
+       
+        if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+}));
 app.use(requestId);
-//app.use("/api", rateLimiter);
+
 app.use(express.json());
 app.use("/api/ai", aiRoutes);
 app.use("/api/auth", authRoutes);
@@ -58,9 +72,13 @@ app.get("/api/health", (req,res)=>{
         success:true, message:"quickbite api is running"
     });
 });
+
+app.get("/", (req, res) => {
+    res.json({ success: true, message: "quickbite api is running" });
+});
+
 const fs = require("fs");
 const distPath = path.join(__dirname, "..", "frontend", "dist");
-
 
 if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));
