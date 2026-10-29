@@ -195,6 +195,7 @@ function handleUseCurrentLocation() {
   const [paymentMethod, setPaymentMethod] = useState("cod");
 
   const [error, setError] = useState("");
+  const [placing, setPlacing] = useState(false);
   const [couponCode, setCouponCode] = useState("");
 const [appliedCoupon, setAppliedCoupon] = useState("");
 const [couponDiscount, setCouponDiscount] = useState(0);
@@ -205,14 +206,7 @@ const deliveryFee = cart.length === 0 || cartTotal >= 300 ? 0 : 40;
 const taxableSubtotal = Math.max(0, cartTotal - couponDiscount);
 const tax = Math.round(taxableSubtotal * 0.05 * 100) / 100;
 const grandTotal = taxableSubtotal + deliveryFee + tax;
-{appliedCoupon && (
-  <div style={styles.summaryLine}>
-    <span>Coupon ({appliedCoupon})</span>
-    <span style={{ color: "#16803c" }}>
-      -₹{couponDiscount.toFixed(2)}
-    </span>
-  </div>
-)}
+
   function handleChange(event) {
 
     const { name, value } = event.target;
@@ -265,6 +259,7 @@ function handleRemoveCoupon() {
 
 async function handleSubmit(event) {
   event.preventDefault();
+  if (placing) return;
   setError("");
 
   if (!getToken()) {
@@ -288,6 +283,7 @@ async function handleSubmit(event) {
   }
 
   let orderCreated = false;
+  setPlacing(true);
 
   try {
     const addressPayload = {
@@ -380,7 +376,7 @@ if(addressId){
     }
 
     window.location.href = "/order-success";
-  } catch (err) {
+    } catch (err) {
     if (orderCreated) {
       setError(
         `Your order may already be placed, but payment setup failed: ${err.message}. Check My Orders before trying again to avoid creating a duplicate order.`
@@ -390,6 +386,8 @@ if(addressId){
         err.message || "Unable to place your order. Please try again."
       );
     }
+  } finally {
+    setPlacing(false);
   }
 }
 
@@ -1066,11 +1064,17 @@ if (
 
               )}
 
-              <button type="submit" style={styles.primaryButton}>
-
-                Place order · ₹{grandTotal}
-
-              </button>
+<button
+  type="submit"
+  disabled={placing}
+  style={{
+    ...styles.primaryButton,
+    opacity: placing ? 0.6 : 1,
+    cursor: placing ? "not-allowed" : "pointer",
+  }}
+>
+  {placing ? "Placing order..." : `Place order · ₹${grandTotal}`}
+</button>
 
               <p style={styles.disclaimer}>
 
