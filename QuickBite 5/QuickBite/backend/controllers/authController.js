@@ -182,8 +182,6 @@ const decoded = await getAuth(adminApp).verifyIdToken(idToken);
     console.error("Firebase login error:", error.code, error.message);
     return res.status(401).json({
         message: "Firebase authentication failed. Please sign in again.",
-        debugCode: error.code || "UNKNOWN",
-        debugMessage: error.message || "No error message"
     });
 }
 };
