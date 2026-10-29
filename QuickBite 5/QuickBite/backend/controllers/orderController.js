@@ -232,48 +232,43 @@ totalAmount = calculatedTotal;
       console.error("order event publish error:", error.message);
     }
 
-    try{
-      await addWithRetry(orderQueue,"order-created",{
-        orderId: order._id.toString(),
-        customerId:req.user._id.toString(),
-      });
-      console.log("order joba added to queue:",order._id);
-    }catch(queueError){
-      console.error("order queue error", queueError.message);
-    }
-    try{
-    const user = await User.findById(req.user._id).select("name email");
-    if(user&& user.email){
-      await addWithRetry(emailQueue,"order-confirmation",{
-        to:user.email,
-        subject:"Quickbite order confirmation",
-        text:`Hi ${user.name || "Customer"},
-        Your Quickbite order has been placed sucessfully!!
-        Order ID:${order._id}
-        Items:${orderItems.map(item=>`${item.name}x${item.quantity}`).join(",")}
-        Subtotal: Rs. ${subtotal}
+      
+    addWithRetry(orderQueue, "order-created", {
+      orderId: order._id.toString(),
+      customerId: req.user._id.toString(),
+    })
+      .then(() => console.log("order job added to queue:", order._id))
+      .catch((e) => console.error("order queue error:", e.message));
+
+    User.findById(req.user._id)
+      .select("name email")
+      .then((user) => {
+        if (!user || !user.email) return;
+        return addWithRetry(emailQueue, "order-confirmation", {
+          to: user.email,
+          subject: "Quickbite order confirmation",
+          text: `Hi ${user.name || "Customer"},
+Your Quickbite order has been placed successfully!
+Order ID: ${order._id}
+Items: ${orderItems.map((item) => `${item.name} x${item.quantity}`).join(", ")}
+Subtotal: Rs. ${subtotal}
 Discount: Rs. ${discountAmount}
 Total Amount: Rs. ${totalAmount}
-        
-        Thankyou from ordering from Quickbite!!!`
-      });
-      console.log("emaail job added to queue:",order._id);
-    }
-  }catch(emailQueueError){
-    console.error("email queuue error:", emailQueueError.message);
-  }
-  try{
-     await addWithRetry(notificationQueue, "order-notification", {
-        user: req.user._id.toString(),
-        title: "Order placed successfully",
-        message: `Your order #${order._id} has been placed successfully. Total amount: Rs. ${totalAmount}.`,
-        type: "order",
-        order: order._id.toString(),
-      });
-      console.log("notification job added to queue:", order._id);
-  }catch(notificationQueueError){
-    console.error("notification queue error:", notificationQueueError.message);
-  }
+
+Thank you for ordering from Quickbite!`,
+        }).then(() => console.log("email job added to queue:", order._id));
+      })
+      .catch((e) => console.error("email queue error:", e.message));
+
+    addWithRetry(notificationQueue, "order-notification", {
+      user: req.user._id.toString(),
+      title: "Order placed successfully",
+      message: `Your order #${order._id} has been placed successfully. Total amount: Rs. ${totalAmount}.`,
+      type: "order",
+      order: order._id.toString(),
+    })
+      .then(() => console.log("notification job added to queue:", order._id))
+      .catch((e) => console.error("notification queue error:", e.message));
 
    
     cart.items = [];
