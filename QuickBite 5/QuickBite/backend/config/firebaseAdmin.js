@@ -1,4 +1,3 @@
-
 const { initializeApp, getApps, cert } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
 
@@ -6,8 +5,10 @@ function loadServiceAccount() {
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
   }
- return require("./firebase-service-account.json");
+
+  return require("./firebase-service-account.json");
 }
+
 let app;
 
 function getFirebaseApp() {
@@ -17,10 +18,11 @@ function getFirebaseApp() {
     getApps().find((item) => item.name === "quickbite-admin") ||
     initializeApp(
       {
-        credential: cert(serviceAccount),
+        credential: cert(loadServiceAccount()),
       },
       "quickbite-admin"
     );
   return app;
 }
+
 module.exports = { getFirebaseApp, getAuth };
